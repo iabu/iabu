@@ -4,12 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buku Saku Gizi</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
   <style>
     :root {
       --primary: #2ECC71;
+      --secondary: #27AE60;
+      --accent: #F1C40F;
       --text: #2C3E50;
-      --page: #fff;
-      --shadow: rgba(0,0,0,0.1);
+      --light: #ECF0F1;
+      --white: #FFFFFF;
     }
 
     * {
@@ -20,301 +23,275 @@
     }
 
     body {
-      background: #f0f2f5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem 1rem;
       color: var(--text);
-    }
-
-    .book-container {
-      max-width: 1200px;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      perspective: 2000px;
-    }
-
-    .book {
-      background: var(--page);
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      height: 600px;
-      transform-style: preserve-3d;
-      transition: transform 0.5s;
-      box-shadow: 0 0 20px var(--shadow);
-    }
-
-    .page {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      padding: 2rem 3rem;
-      background: var(--page);
-      overflow-y: auto;
-      display: none;
-      transform-origin: left center;
-      transition: transform 0.5s;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    .page-content {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .page-number {
-      position: absolute;
-      bottom: 2rem;
-      width: 100%;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #666;
-    }
-
-    h1 {
-      color: var(--primary);
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-    }
-
-    h2 {
-      color: var(--primary);
-      font-size: 1.5rem;
-      margin: 1.5rem 0 1rem;
-    }
-
-    p {
-      margin-bottom: 1rem;
       line-height: 1.6;
     }
 
-    ul {
-      margin: 1rem 0;
-      padding-left: 1.5rem;
-    }
-
-    li {
-      margin-bottom: 0.5rem;
-    }
-
-    .navigation {
+    /* Navigation */
+    nav {
+      background: var(--white);
+      padding: 1rem 5%;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       display: flex;
-      gap: 1rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo::before {
+      content: '🥗';
+      font-size: 1.8rem;
+    }
+
+    .menu {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .menu a:hover {
+      color: var(--primary);
+    }
+
+    .menu a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: var(--primary);
+      transition: width 0.3s;
+    }
+
+    .menu a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(241, 196, 15, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5rem 1rem;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      padding: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      color: var(--text);
+      opacity: 0.9;
+    }
+
+    /* Materi Section */
+    .materi {
+      padding: 5rem 5%;
+      background: var(--white);
+    }
+
+    .materi h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      color: var(--text);
+    }
+
+    .materi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
       margin-top: 2rem;
     }
 
+    .card {
+      background: var(--white);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .card p {
+      margin-bottom: 1.5rem;
+      color: var(--text);
+      opacity: 0.9;
+    }
+
+    /* Buttons */
     button {
       background: var(--primary);
       color: white;
       border: none;
-      padding: 0.8rem 1.5rem;
+      padding: 1rem 2rem;
       border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: transform 0.3s, opacity 0.3s;
+      transition: transform 0.3s, background 0.3s;
     }
 
     button:hover {
-      opacity: 0.9;
+      background: var(--secondary);
       transform: scale(1.05);
     }
 
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-      transform: none;
+    /* Footer */
+    footer {
+      background: var(--text);
+      color: var(--light);
+      text-align: center;
+      padding: 2rem;
     }
 
-    .progress {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background: var(--primary);
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
+    /* Mobile Responsive */
     @media (max-width: 768px) {
-      .book {
-        height: 500px;
+      .menu {
+        display: none;
       }
 
-      .page {
-        padding: 1.5rem;
+      .hero h1 {
+        font-size: 2.5rem;
       }
 
-      h1 {
-        font-size: 1.5rem;
-      }
-
-      h2 {
+      .hero p {
         font-size: 1.2rem;
+      }
+
+      .materi {
+        padding: 3rem 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="progress">Halaman <span id="currentPage">1</span> dari <span id="totalPages">5</span></div>
-  
-  <div class="book-container">
-    <div class="book" id="book">
-      <div class="page active" id="page1">
-        <div class="page-content">
-          <h1>Triple Burden of Malnutrition</h1>
-          <p>Nutritional problems in children in Indonesia often do not stand alone. There are three major problems called the Triple Burden of Malnutrition, namely:</p>
-          
-          <h2>Undernutrition:</h2>
-          <p>Children who lack nutritious food can experience:</p>
-          <ul>
-            <li><strong>Stunting:</strong> Children grow short due to long-term malnutrition.</li>
-            <li><strong>Wasting:</strong> Children are too thin for their height.</li>
-            <li><strong>Underweight:</strong> Children's weight is too low for their age.</li>
-          </ul>
-          
-          <h2>Overnutrition:</h2>
-          <p>Children who eat too many high-calorie but low-nutrient foods can lead to obesity, risking serious diseases like diabetes or high blood pressure.</p>
-        </div>
-        <div class="page-number">Halaman 1</div>
+  <header>
+    <nav>
+      <div class="logo">Buku Saku Gizi</div>
+      <ul class="menu">
+        <li><a href="#home">Beranda</a></li>
+        <li><a href="#materi">Materi</a></li>
+        <li><a href="#tips">Tips</a></li>
+        <li><a href="#kuis">Kuis</a></li>
+        <li><a href="#tentang">Tentang Kami</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="home" class="hero">
+    <div class="hero-content" data-aos="fade-up">
+      <h1>Membangun Generasi Sehat</h1>
+      <p>Dimulai dari Gizi yang Tepat!</p>
+      <button onclick="scrollToSection('materi')">Pelajari Sekarang</button>
+    </div>
+  </section>
+
+  <section id="materi" class="materi">
+    <h2 data-aos="fade-up">Materi Utama</h2>
+    <div class="materi-grid">
+      <div class="card" data-aos="fade-up" data-aos-delay="100">
+        <h3>Triple Burden</h3>
+        <p>Tiga masalah besar gizi di Indonesia yang perlu kita ketahui dan atasi bersama.</p>
+        <button>Baca Selengkapnya</button>
       </div>
-
-      <div class="page" id="page2">
-        <div class="page-content">
-          <h1>Apa itu Stunting?</h1>
-          <p>Stunting is one of the most serious forms of malnutrition in Indonesia. Children who experience stunting usually:</p>
-          <ul>
-            <li>Grow shorter than children their age.</li>
-            <li>Have stunted brain development, so their learning ability is lower.</li>
-            <li>Are at risk of experiencing health problems as adults.</li>
-          </ul>
-
-          <h2>Causes of stunting:</h2>
-          <ul>
-            <li>Not enough nutritious food, especially in the First 1000 Days of Life.</li>
-            <li>Improper parenting, such as not providing exclusive breastfeeding.</li>
-            <li>Poor sanitation, such as unclean drinking water.</li>
-          </ul>
-        </div>
-        <div class="page-number">Halaman 2</div>
+      <div class="card" data-aos="fade-up" data-aos-delay="200">
+        <h3>Stunting</h3>
+        <p>Kenali dan cegah pertumbuhan terhambat pada anak sejak dini.</p>
+        <button>Baca Selengkapnya</button>
       </div>
-
-      <div class="page" id="page3">
-        <div class="page-content">
-          <h1>Pemenuhan Nutrisi Setiap Tahap</h1>
-          
-          <h2>0-6 bulan:</h2>
-          <p>Provide exclusive breastfeeding. Breast milk contains all the nutrients a baby needs.</p>
-          
-          <h2>6-12 bulan:</h2>
-          <p>Add Complementary Foods (MPASI). Ensure MPASI contains iron, protein, and vitamins.</p>
-          
-          <h2>1-2 tahun:</h2>
-          <p>Children start eating family food. Provide a variety of foods like rice, meat, fish, vegetables.</p>
-          
-          <h2>2-5 tahun:</h2>
-          <p>Children need to learn to eat with a regular and nutritious pattern.</p>
-        </div>
-        <div class="page-number">Halaman 3</div>
-      </div>
-
-      <div class="page" id="page4">
-        <div class="page-content">
-          <h1>Tips Pengasuhan Gizi</h1>
-          
-          <h2>Menangani Anak Susah Makan:</h2>
-          <ul>
-            <li>Don't force your child to eat</li>
-            <li>Serve food with an attractive appearance</li>
-            <li>Make mealtime a fun moment</li>
-          </ul>
-
-          <h2>Membangun Kebiasaan Makan Sehat:</h2>
-          <ul>
-            <li>Involve children in preparing food</li>
-            <li>Give examples of healthy eating patterns</li>
-            <li>Limit sweet snacks and fried foods</li>
-          </ul>
-        </div>
-        <div class="page-number">Halaman 4</div>
-      </div>
-
-      <div class="page" id="page5">
-        <div class="page-content">
-          <h1>Mitos & Fakta Tentang Gizi</h1>
-          
-          <h2>Mitos 1:</h2>
-          <p><strong>Mitos:</strong> Fat children are healthy.<br>
-          <strong>Fakta:</strong> Fat children are at higher risk of developing diseases.</p>
-          
-          <h2>Mitos 2:</h2>
-          <p><strong>Mitos:</strong> Children who don't like vegetables don't need to eat them.<br>
-          <strong>Fakta:</strong> Children still need to learn to eat vegetables.</p>
-          
-          <h2>Mitos 3:</h2>
-          <p><strong>Mitos:</strong> Formula milk is as good as breast milk.<br>
-          <strong>Fakta:</strong> Breast milk remains the best choice.</p>
-        </div>
-        <div class="page-number">Halaman 5</div>
+      <div class="card" data-aos="fade-up" data-aos-delay="300">
+        <h3>Pemenuhan Nutrisi</h3>
+        <p>Panduan lengkap gizi sesuai usia anak untuk tumbuh kembang optimal.</p>
+        <button>Baca Selengkapnya</button>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="navigation">
-    <button id="prevBtn" onclick="changePage(-1)" disabled>← Sebelumnya</button>
-    <button id="nextBtn" onclick="changePage(1)">Selanjutnya →</button>
-  </div>
+  <footer>
+    <p>&copy; 2024 Buku Saku Gizi - Semua Hak Dilindungi</p>
+  </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
   <script>
-    let currentPage = 1;
-    const totalPages = 5;
-
-    function changePage(direction) {
-      const oldPage = document.getElementById(`page${currentPage}`);
-      currentPage += direction;
-      const newPage = document.getElementById(`page${currentPage}`);
-      
-      oldPage.classList.remove('active');
-      newPage.classList.add('active');
-      
-      document.getElementById('currentPage').textContent = currentPage;
-      
-      // Update buttons
-      document.getElementById('prevBtn').disabled = currentPage === 1;
-      document.getElementById('nextBtn').disabled = currentPage === totalPages;
-      
-      // Add page turn animation
-      const book = document.getElementById('book');
-      book.style.transform = `rotateY(${direction * -2}deg)`;
-      setTimeout(() => {
-        book.style.transform = 'rotateY(0)';
-      }, 200);
-    }
-
-    // Add touch swipe functionality
-    let touchStartX = 0;
-    const book = document.getElementById('book');
-
-    book.addEventListener('touchstart', e => {
-      touchStartX = e.touches[0].clientX;
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true
     });
 
-    book.addEventListener('touchend', e => {
-      const touchEndX = e.changedTouches[0].clientX;
-      const diff = touchStartX - touchEndX;
+    // Smooth scroll function
+    function scrollToSection(sectionId) {
+      document.getElementById(sectionId).scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
 
-      if (Math.abs(diff) > 50) { // Minimum swipe distance
-        if (diff > 0 && currentPage < totalPages) { // Swipe left
-          changePage(1);
-        } else if (diff < 0 && currentPage > 1) { // Swipe right
-          changePage(-1);
-        }
+    // Add shadow to navbar on scroll
+    window.addEventListener('scroll', function() {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 50) {
+        nav.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+      } else {
+        nav.style.boxShadow = 'none';
       }
     });
   </script>
